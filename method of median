@@ -1,0 +1,104 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace methode_of_median
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.Write("enter number of items ");
+            int n = int.Parse(Console.ReadLine());
+            Console.WriteLine("enter the items values  ");
+            int[] p = new int[n];
+            for (int i = 0; i < n; i++)
+            {
+                p[i] = int.Parse(Console.ReadLine());
+
+            }
+
+            Array.Sort(p);
+
+
+            Console.WriteLine("median : " + median(p,n));
+            Console.WriteLine("range : " + (p.Max() - p.Min ()));
+            Console.WriteLine("mode : " + mode(p));
+            Console.WriteLine("first quartile : " + Quartile(p,1));
+            int x = Quartile(p,1);
+            Console.WriteLine("third quartile : " + Quartile(p,3));
+            int y = Quartile(p,3);
+            Console.WriteLine("p90 : " +Math.Ceiling(.9 * (n)) );
+            Console.WriteLine("interquartile : " + (Quartile(p, 3) - Quartile(p,1 )));
+            int iqr = (Quartile(p, 3) - Quartile(p, 1));
+            Console.WriteLine($"outlier region : " + "["+ lowerboundary(p)+","+upperboundary(p)+"]");
+            Console.WriteLine("enter avalu to check if its an outlier : " );
+            double input =double.Parse(Console.ReadLine());
+            if (upperboundary(p)<input){
+                Console.WriteLine("value is upper");
+            }else
+                Console.WriteLine(
+                    "value is lower");
+            Console.ReadKey();
+        }
+        static double median(int[] p,int n)
+        {
+            if (n % 2 == 0)
+            {
+                return (p[n / 2 - 1] + p[n / 2]) / 2;
+
+            }
+            else
+                return p[n / 2];
+        }
+        static int mode(int[] p)
+        {
+            int x = 0;
+            int mode = p[0];
+
+            for (int i = 0; i < p.Length; i++)
+            {
+                int count = 0;
+                for (int j = 0; j < p.Length; j++)
+                {
+                    if (p[j] == p[i])
+                        count++;
+                }
+                if (count > x)
+                {
+                    x = count;
+                    mode = p[i];
+                }
+            }
+            return mode;
+        }
+        static int Quartile(int[] p, int q)
+        {
+            double position = (double)q / 4;
+            int n = p.Length;
+            int index = (int)Math.Ceiling(position * n) - 1;
+            return p[index];
+
+        }
+        static double upperboundary(int[] p)
+        {
+            int x = Quartile(p, 3);
+            int iqr = (Quartile(p, 3) - Quartile(p, 1));
+            double uber = x + 1.5 * iqr;
+
+            return uber;
+
+        }
+        static double lowerboundary(int[] p)
+        {
+            int x = Quartile(p, 1);
+            int iqr = (Quartile(p, 3) - Quartile(p, 1));
+            double lower = x - 1.5 * iqr;
+            return lower;
+
+        }
+    }
+}
